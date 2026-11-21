@@ -1,0 +1,17 @@
+{
+  "name": "lens-calibration-workbench",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lens calibration and undistortion workbench with zoom+crop sequence analysis and safe-crop validation",
+  "type": "module",
+  "scripts": {
+    "start": "node tools/serve.js",
+    "test": "node --test \"test/unit/*.test.js\"",
+    "test:e2e": "node --test \"test/e2e/*.test.js\""
+  },
+  "devDependencies": {
+    "jpeg-js": "^0.4.4",
+    "pngjs": "^7.0.0",
+    "playwright-core": "1.49.1"
+  }
+}

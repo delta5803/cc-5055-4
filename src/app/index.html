@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lens Calibration &amp; Undistortion Workbench</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>Lens Calibration &amp; Undistortion Workbench</h1>
+    <div class="topbar-actions">
+      <span id="status" class="status">initialising…</span>
+      <button id="btn-solve" class="primary">Solve</button>
+      <button id="btn-export-map" disabled>Export map</button>
+      <button id="btn-export-json" disabled>Export report</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <section class="panel">
+        <h2>Dataset</h2>
+        <div class="field">
+          <label><input type="radio" name="dataset" value="synthetic" checked /> Synthetic (ground truth)</label>
+          <label><input type="radio" name="dataset" value="real" /> Real photos (OpenCV samples)</label>
+        </div>
+        <p class="hint" id="dataset-hint">A zoom + crop sequence with an exactly known lens. One strongly tilted board can be deleted to watch the safe crop change.</p>
+      </section>
+
+      <section class="panel">
+        <h2>Views <span class="muted" id="views-summary"></span></h2>
+        <div id="view-list" class="view-list"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Lens model</h2>
+        <div class="field">
+          <label>Path
+            <select id="path-select">
+              <option value="shared">Shared physical sensor</option>
+              <option value="per">Per focal length</option>
+            </select>
+          </label>
+        </div>
+        <div class="field">
+          <label>Distortion model
+            <select id="model-select">
+              <option value="poly5">poly5 (k1,k2,k3,p1,p2)</option>
+              <option value="poly2">poly2 (k1,k2,p1,p2)</option>
+            </select>
+          </label>
+        </div>
+        <div class="field">
+          <label>Output scale
+            <select id="window-mode">
+              <option value="auto">Auto (from actual map)</option>
+              <option value="full">Request full frame</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Display</h2>
+        <div class="field">
+          <label><input type="checkbox" id="show-corners" checked /> Detected corners</label>
+          <label><input type="checkbox" id="show-lines" checked /> Held-out straight lines</label>
+          <label><input type="checkbox" id="show-field" /> Distortion field vectors</label>
+          <label><input type="checkbox" id="show-window" checked /> Safe crop window</label>
+          <label><input type="checkbox" id="show-map-valid" /> Map validity overlay</label>
+        </div>
+        <div class="field">
+          <label>View <select id="view-select"></select></label>
+        </div>
+        <div class="field">
+          <label>Mode
+            <select id="canvas-mode">
+              <option value="raw">Raw</option>
+              <option value="undistorted">Undistorted (resampled)</option>
+              <option value="difference">Overlay: raw vs corrected corners</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Corner picking</h2>
+        <p class="hint">Click a detected corner to exclude it from the fit. Its neighbours are still used. Excluded corners are drawn hollow.</p>
+        <div class="field"><button id="btn-reset-corners">Re-include all corners</button></div>
+      </section>
+    </aside>
+
+    <section class="stage">
+      <canvas id="canvas" width="640" height="480"></canvas>
+      <div class="stage-tools">
+        <span id="hover" class="hover"></span>
+        <span id="canvas-caption" class="caption"></span>
+      </div>
+    </section>
+
+    <aside class="sidebar right">
+      <section class="panel">
+        <h2>Fit</h2>
+        <div id="fit-out" class="kv"></div>
+      </section>
+      <section class="panel">
+        <h2>Safe crop (from the map)</h2>
+        <div id="window-out" class="kv"></div>
+        <div id="window-note" class="note"></div>
+      </section>
+      <section class="panel">
+        <h2>Verification</h2>
+        <div id="verify-out" class="kv"></div>
+        <div id="verify-note" class="note"></div>
+      </section>
+      <section class="panel">
+        <h2>Per-view residuals</h2>
+        <div id="residuals-out" class="kv small"></div>
+      </section>
+    </aside>
+  </main>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
